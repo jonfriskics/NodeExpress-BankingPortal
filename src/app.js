@@ -8,6 +8,7 @@ app.set('views',path.join(__dirname, '/views'))
 app.set('view engine','ejs')
 
 app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.urlencoded({extended: true}))
 
 const accountData = fs.readFileSync('src/json/accounts.json', 'utf8')
 const accounts = JSON.parse(accountData)
@@ -26,6 +27,9 @@ app.get('/checking', (req, res) => {
 })
 app.get('/credit', (req, res) => {
     res.render('account', {account: accounts.savings})
+})
+app.get('transfer', (req, res) => {
+    res.render('transfer')
 })
 
 app.get('/profile', (req, res) => {
