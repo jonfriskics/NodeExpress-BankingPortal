@@ -7,7 +7,7 @@ const app = new express()
 app.set('views',path.join(__dirname, '/views'))
 app.set('view engine','ejs')
 
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, '/public')))
 app.use(express.urlencoded({extended: true}))
 
 const accountData = fs.readFileSync('src/json/accounts.json', 'utf8')
@@ -35,9 +35,25 @@ app.post('/transfer', (req, res) => {
     const from = req.body.from
     const to = req.body.to
     const amount = req.body.amount
+    let from_bal = accounts[from].balance
+    let to_bal = accounts[to].balance
+    accounts[from].balance = from_bal - parseInt(amount)
+    accounts[to].balance = to_bal + parseInt(amount)
 
-    accounts[from].balance = from - amount
-    accounts[to].balance = parseInt(to) + parseInt(amount)
+    let accountsJSON = JSON.stringify(accounts)
+    fs.writeFileSync(path.join(__dirname, '/json','accounts.json'), accountsJSON, 'utf8')
+
+    res.render('transfer', {message: 'Transfer Completed'})
+})
+app.get('/payment', (req, res) => {
+    res.render('payment', {account: accounts.credit})
+})
+app.post('/payment', (req, res) => {
+    accounts.credit.balance = accounts.credit.balance - req.body.amount
+    accounts.credit.available = parseInt(accounts.credit.available) + parseInt(req.body.amount)
+    let accountsJSON = JSON.stringify(accounts)
+    fs.writeFileSync(path.join(__dirname, '/json','accounts.json'), accountsJSON, 'utf8')
+    res.render('payment', {message: 'Payment Successful', account: accounts.credit})
 })
 app.get('/profile', (req, res) => {
     res.render('profile', {user: users[0]})
