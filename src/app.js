@@ -31,7 +31,13 @@ app.get('/credit', (req, res) => {
 app.get('/transfer', (req, res) => {
     res.render('transfer')
 })
+app.post('/transfer', (req, res) => {
+    const from = req.body.from
+    const to = req.body.to
+    const amount = req.body.amount
 
+    
+})
 app.get('/profile', (req, res) => {
     res.render('profile', {user: users[0]})
 })
