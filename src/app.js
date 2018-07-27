@@ -36,7 +36,8 @@ app.post('/transfer', (req, res) => {
     const to = req.body.to
     const amount = req.body.amount
 
-    
+    accounts[from].balance = from - amount
+    accounts[to].balance = parseInt(to) + parseInt(amount)
 })
 app.get('/profile', (req, res) => {
     res.render('profile', {user: users[0]})
