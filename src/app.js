@@ -28,7 +28,7 @@ app.get('/checking', (req, res) => {
 app.get('/credit', (req, res) => {
     res.render('account', {account: accounts.savings})
 })
-app.get('transfer', (req, res) => {
+app.get('/transfer', (req, res) => {
     res.render('transfer')
 })
 
